@@ -13,7 +13,7 @@
 
 ## Dataset
 
-- **Hugging Face:** [ChemFM/MolLangData](https://huggingface.co/datasets/ChemFM/MolLangData) — download and use the dataset (Parquet, `datasets` library).
+- **Hugging Face:** [ChemFM/MolLangData](https://huggingface.co/datasets/ChemFM/MolLangData) — download and use the dataset.
 - **Related benchmark:** [MolLangBench](https://github.com/TheLuoFengLab/MolLangBench) — human-curated benchmark for molecular structure recognition, editing, and generation. The generation task is similar to the structural description in this work but can be regarded as a standard evaluation, since it is human-curated and rigorously validated.
 
 ---
