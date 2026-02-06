@@ -1,4 +1,4 @@
-# MolLangData
+# A Large-Scale Dataset for Molecular Structure-Language Description via a Rule-Regularized Method
 
 [![arXiv](https://img.shields.io/badge/arXiv-2602.02320-b31b1b.svg)](https://arxiv.org/abs/2602.02320)
 [![Hugging Face](https://img.shields.io/badge/🤗%20Datasets-ChemFM%2FMolLangData-yellow)](https://huggingface.co/datasets/ChemFM/MolLangData)
