@@ -18,6 +18,14 @@
 
 ---
 
+## Collaboration Wanted
+
+We are actively continuing research on molecular–language alignment, including dataset curation and multimodal model development.
+
+We welcome collaborators who are interested in working together in this area.  Please contact [Feiyang Cai](mailto:feiyang@clemson.edu) to discuss potential collaboration.
+
+---
+
 ## OPSIN (IUPAC → XML / SMILES)
 
 We use a customized [OPSIN](https://github.com/feiyang-cai/opsin_mollangdata) fork that adds **complete XML structure metadata** for building prompts:
