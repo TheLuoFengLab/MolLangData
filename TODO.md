@@ -8,15 +8,15 @@ This file tracks the planned work for this repository. The repo is **under const
 
 ### 1.1 Simple generation code
 
-- [ ] Minimal script: input = IUPAC (or SMILES) + metadata (e.g. from OPSIN XML).
-- [ ] Output = one structure description via a single LLM call.
-- [ ] Reuse prompt logic from `demo.py` (e.g. `prompts/smiles_iupac_metadata_v13/`).
+- [x] Minimal script: input = IUPAC (and SMILES) + metadata (e.g. from OPSIN XML).
+- [x] Output = one structure description via a single LLM call.
+- [x] Reuse prompt logic from `get_prompt_description_from_iupac.py` (e.g. `prompts/smiles_iupac_metadata_v13/`).
 
 ### 1.2 Routing example
 
-- [ ] Document or script showing **difficulty-based routing** (easy / medium / hard).
-- [ ] Map to model and reasoning effort (e.g. high vs xhigh) as in the dataset stats.
-- [ ] Optional: semantic routing (e.g. bridged / fused / spiro) for prompt variant selection.
+- [x] Document or script showing **difficulty-based routing** (easy / medium / hard).
+- [x] Map to model and reasoning effort (e.g. high vs xhigh) as in the dataset stats.
+- [x] Optional: semantic routing (e.g. bridged / fused / spiro) for prompt variant selection.
 
 ### 1.3 Whole pipeline (batch API)
 
@@ -35,5 +35,5 @@ This file tracks the planned work for this repository. The repo is **under const
 
 ## 3. Integration
 
-- [x] **Demo** (IUPAC → XML + prompt) is in repo root: `demo.py`, JAR, and `prompts/`.
+- [x] **Demo** (IUPAC → XML + prompt) is in repo root: `get_prompt_description_from_iupac.py`, JAR, and `prompts/`.
 - [ ] Align `requirements.txt` and any scripts with the HF dataset repo (`mollangdata_hf`) where relevant.

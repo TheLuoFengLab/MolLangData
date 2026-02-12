@@ -1,0 +1,10 @@
+{
+  "backend": "azure",
+  "model": "gpt-5.2",
+  "reasoning_effort": "xhigh",
+  "difficulty_level": "medium",
+  "timeout": 1800,
+  "attempts": 1,
+  "iupac": "3,4-dihydro-2H-1,5-benzodioxepin-7-yl-(2-fluorophenyl)methanone",
+  "mollangdata_status": "SUCCESS"
+}
