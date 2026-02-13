@@ -5,8 +5,8 @@
   "attempts": 1,
   "easy": {
     "model": "gpt-5.2",
-    "reasoning_effort": "high",
-    "timeout": 1200
+    "reasoning_effort": "xhigh",
+    "timeout": 1800
   },
   "medium": {
     "model": "gpt-5.2",

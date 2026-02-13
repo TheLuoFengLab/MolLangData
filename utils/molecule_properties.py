@@ -368,22 +368,24 @@ def get_difficulty_level(smiles: str, iupac: str = None, xml_metadata: str = Non
     """
     Classify molecule difficulty as "hard", "medium", or "easy" for routing.
 
-    - hard: largest_fused > 2, or (largest_fused > 1 and (spiro or bridged))
-    - medium: at least one ring
-    - easy: chain (no rings)
-
-    Requires RDKit (ImportError at import time if not installed).
+    Logic follows MolLangData/scripts/routing_example.py route_molecule_and_prompt() (lines 68-82):
+    - hard   -> gpt-5-pro, high   (largest_fused > 2 or (largest_fused > 1 and (spiro or bridged)) or num_fused_ring_systems > 1)
+    - medium -> gpt-5-batch, high (largest_fused > 1)
+    - easy   -> gpt-5-batch, medium (else)
     """
-    largest_fused = largest_fused_ring_count(smiles, iupac=iupac, xml_metadata=xml_metadata, **kwargs)
+    # Same variables and conditions as routing_example.route_molecule_and_prompt
     has_spiro = has_spiro_ring(smiles, iupac=iupac, xml_metadata=xml_metadata, **kwargs)
     has_bridged = has_bridged_ring(smiles, iupac=iupac, xml_metadata=xml_metadata, **kwargs)
-    num_rings = count_rings(smiles, iupac=iupac, xml_metadata=xml_metadata, **kwargs)
+    largest_fused = largest_fused_ring_count(smiles, iupac=iupac, xml_metadata=xml_metadata, **kwargs)
+    num_fused_ring_systems = count_fused_ring_systems(smiles, iupac=iupac, xml_metadata=xml_metadata, **kwargs)
 
-    if largest_fused > 2 or (largest_fused > 1 and (has_spiro or has_bridged)):
+    # Routing logic: prioritize complex systems (same as routing_example.py)
+    if largest_fused > 2 or (largest_fused > 1 and (has_spiro or has_bridged)) or (num_fused_ring_systems > 1):
         return "hard"
-    if num_rings >= 1:
+    elif largest_fused > 1:
         return "medium"
-    return "easy"
+    else:
+        return "easy"
 
 
 # Registry of available property functions

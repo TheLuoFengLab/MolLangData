@@ -22,6 +22,74 @@ from typing import Any
 
 from utils.molecule_properties import get_difficulty_level
 
+try:
+    from utils.molecule_properties import (
+        has_fused_ring_system,
+        has_spiro_ring,
+        has_bridged_ring,
+    )
+    PROPERTIES_AVAILABLE = True
+except ImportError:
+    PROPERTIES_AVAILABLE = False
+
+
+def build_dynamic_prompt_template(
+    default_template_path: Path,
+    smiles: str,
+    iupac: str,
+    xml_metadata: str,
+    exclude_xml: bool = False,
+) -> str:
+    """
+    Build prompt template by combining default template with semantic sections.
+
+    Semantic sections (fused, spiro, bridged) are added before the "**Inputs:**" section
+    if the molecule has those ring types.
+
+    When exclude_xml is enabled, we don't add semantic information because there is no XML information.
+    """
+    if not default_template_path.exists():
+        raise FileNotFoundError(f"Default prompt template not found: {default_template_path}")
+
+    template = default_template_path.read_text(encoding="utf-8")
+
+    inputs_marker = "**Inputs:**"
+    inputs_index = template.find(inputs_marker)
+
+    if inputs_index == -1:
+        return template
+
+    before_inputs = template[:inputs_index]
+    inputs_section = template[inputs_index:]
+
+    semantic_sections: list[str] = []
+    prompts_dir = default_template_path.parent
+
+    if PROPERTIES_AVAILABLE and not exclude_xml:
+        has_fused = has_fused_ring_system(smiles, iupac, xml_metadata)
+        has_spiro = has_spiro_ring(smiles, iupac, xml_metadata)
+        has_bridged = has_bridged_ring(smiles, iupac, xml_metadata)
+
+        if has_fused:
+            fused_path = prompts_dir / "fused_ring_semantic.md"
+            if fused_path.exists():
+                semantic_sections.append(fused_path.read_text(encoding="utf-8"))
+
+        if has_spiro:
+            spiro_path = prompts_dir / "spiro_ring_semantic.md"
+            if spiro_path.exists():
+                semantic_sections.append(spiro_path.read_text(encoding="utf-8"))
+
+        if has_bridged:
+            bridged_path = prompts_dir / "bridged_ring_semantic.md"
+            if bridged_path.exists():
+                semantic_sections.append(bridged_path.read_text(encoding="utf-8"))
+
+    if semantic_sections:
+        semantic_content = "\n\n" + "\n\n".join(semantic_sections) + "\n\n---\n\n"
+        return before_inputs + semantic_content + inputs_section
+    return template
+
 
 def _extract_json_from_process_output(stdout: str) -> dict:
     """
@@ -74,8 +142,18 @@ def run_opsin_java(jar_path: Path, iupac: str, timeout_s: int = 30) -> dict:
     return _extract_json_from_process_output(p.stdout)
 
 
-def build_prompt_v13(prompts_dir: Path, iupac: str, smiles: str, xml_metadata: str) -> str:
-    template = (prompts_dir / "default.md").read_text(encoding="utf-8")
+def build_prompt_v13(
+    prompts_dir: Path,
+    iupac: str,
+    smiles: str,
+    xml_metadata: str,
+    exclude_xml: bool = False,
+) -> str:
+    """Build prompt with dynamic template (fused/spiro/bridged semantic sections) then fill placeholders."""
+    default_path = prompts_dir / "default.md"
+    template = build_dynamic_prompt_template(
+        default_path, smiles, iupac, xml_metadata, exclude_xml=exclude_xml
+    )
     return (
         template.replace("{IUPAC}", iupac)
         .replace("{SMILES}", smiles)
