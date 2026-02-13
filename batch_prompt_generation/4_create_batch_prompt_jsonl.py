@@ -14,7 +14,7 @@ import re
 import argparse
 import pandas as pd
 from pathlib import Path
-from typing import Optional, Dict, Tuple
+from typing import Optional, Dict, Tuple, List
 import random
 import json
 
@@ -82,6 +82,68 @@ def _apply_exclude_prompt_options(prompt: str, exclude_iupac: bool, exclude_xml:
     return prompt
 
 
+def build_batch_request_entry(
+    *,
+    api_format: str,
+    custom_id: str,
+    model: str,
+    reasoning_effort: str,
+    prompt: str,
+    chat_completions_url: str,
+    responses_url: str,
+) -> Dict:
+    """
+    Build a single JSONL line for OpenAI Batch-style request files.
+    Only API fields are included (custom_id, method, url, body); difficulty_level
+    is not part of the LLM API and is never written to JSONL.
+
+    - chat_completions: POST /v1/chat/completions with {"model", "messages", "reasoning_effort"?}
+    - responses: POST /v1/responses with {"model", "input", "reasoning": {"effort": ...}?}
+    """
+    api_format = (api_format or "").strip().lower()
+    if api_format not in {"chat_completions", "responses"}:
+        raise ValueError(f"Unsupported api_format={api_format!r} (expected 'chat_completions' or 'responses')")
+
+    if api_format == "responses":
+        body: Dict = {
+            "model": model,
+            "input": prompt,
+        }
+        if reasoning_effort:
+            body["reasoning"] = {"effort": reasoning_effort}
+        entry: Dict = {
+            "custom_id": custom_id,
+            "method": "POST",
+            "url": responses_url,
+            "body": body,
+        }
+    else:
+        body = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+        }
+        if reasoning_effort:
+            body["reasoning_effort"] = reasoning_effort
+        entry = {
+            "custom_id": custom_id,
+            "method": "POST",
+            "url": chat_completions_url,
+            "body": body,
+        }
+
+    return entry
+
+
+def extract_effort_from_entry(entry: Dict, api_format: str) -> str:
+    """Normalize reasoning effort for grouping/file naming."""
+    body = entry.get("body") or {}
+    api_format = (api_format or "").strip().lower()
+    if api_format == "responses":
+        reasoning = body.get("reasoning") or {}
+        return reasoning.get("effort") or "none"
+    return body.get("reasoning_effort") or "none"
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Create batch prompt JSONL from MolLangData TSV with difficulty-based model selection (same as get_prompt_description_from_iupac)",
@@ -127,7 +189,25 @@ Examples (run from repo root or batch_prompt_generation/):
         action="store_true",
         help="Do not write individual prompt .txt files, only JSONL",
     )
-
+    parser.add_argument(
+        "--api-format",
+        type=str,
+        choices=["responses", "chat_completions"],
+        default="chat_completions",
+        help="Batch request format/endpoints to emit (default: chat_completions)",
+    )
+    parser.add_argument(
+        "--chat-completions-url",
+        type=str,
+        default="/v1/chat/completions",
+        help="URL field to use for chat completions JSONL entries (default: /v1/chat/completions)",
+    )
+    parser.add_argument(
+        "--responses-url",
+        type=str,
+        default="/v1/responses",
+        help="URL field to use for responses JSONL entries (default: /v1/responses)",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input_folder)
@@ -233,29 +313,25 @@ Examples (run from repo root or batch_prompt_generation/):
             with open(out_txt, "w", encoding="utf-8") as f:
                 f.write(prompt)
 
-        body = {
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-        }
-        if reasoning_effort:
-            body["reasoning_effort"] = reasoning_effort
-        jsonl_entries.append({
-            "custom_id": compound_id,
-            "method": "POST",
-            "url": "/v1/chat/completions",
-            "body": body,
-            "difficulty_level": level,
-        })
+        entry = build_batch_request_entry(
+            api_format=args.api_format,
+            custom_id=compound_id,
+            model=model,
+            reasoning_effort=reasoning_effort,
+            prompt=prompt,
+            chat_completions_url=args.chat_completions_url,
+            responses_url=args.responses_url,
+        )
+        jsonl_entries.append((entry, level))
         generated += 1
         if generated % 1000 == 0:
             print(f"  {generated:,} / {len(df):,}")
 
-    # Write JSONL by (model, reasoning_effort, difficulty_level)
-    groups = {}
-    for entry in jsonl_entries:
+    # Write JSONL by (model, reasoning_effort, difficulty_level); only API fields in file
+    groups: Dict[Tuple[str, str, str], List[Dict]] = {}
+    for entry, difficulty_level in jsonl_entries:
         model = entry["body"]["model"]
-        effort = entry["body"].get("reasoning_effort") or "none"
-        difficulty_level = entry.get("difficulty_level", "unknown")
+        effort = extract_effort_from_entry(entry, args.api_format)
         key = (model, effort, difficulty_level)
         if key not in groups:
             groups[key] = []
@@ -266,7 +342,7 @@ Examples (run from repo root or batch_prompt_generation/):
         ms = model.replace("/", "_").replace("\\", "_").replace(":", "_")
         es = effort.replace("/", "_").replace("\\", "_").replace(":", "_")
         ds = difficulty_level.replace("/", "_").replace("\\", "_").replace(":", "_")
-        out_jsonl = output_path / f"jobs_{ms}-{es}-{ds}.jsonl"
+        out_jsonl = output_path / f"jobs_{args.api_format}_{ms}-{es}-{ds}.jsonl"
         with open(out_jsonl, "w", encoding="utf-8") as f:
             for e in entries:
                 f.write(json.dumps(e) + "\n")
