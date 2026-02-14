@@ -221,7 +221,7 @@ python3 batch_prompt_generation/4_create_batch_prompt_jsonl.py <input_folder> <o
 
 ### Step 5 — Run LLM jobs (structure descriptions)
 
-> **Cost warning:** Step 5 calls the LLM API for every prompt and can incur **large costs** (e.g. hundreds of thousands of requests). Check usage and billing before running. We recommend using the **published [MolLangData](https://huggingface.co/datasets/ChemFM/MolLangData) dataset** unless you need to regenerate or extend descriptions.
+> ⚠️ **Cost warning:** Step 5 calls the LLM API for every prompt and can incur **large costs** (e.g. hundreds of thousands of requests). Check usage and billing before running. We recommend using the **published [MolLangData](https://huggingface.co/datasets/ChemFM/MolLangData) dataset** unless you need to regenerate or extend descriptions.
 
 **Two options:**
 
