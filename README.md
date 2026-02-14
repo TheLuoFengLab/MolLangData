@@ -2,6 +2,10 @@
 
 <a id="readme-top"></a>
 
+[![GitHub stars](https://img.shields.io/github/stars/TheLuoFengLab/MolLangData.svg)](https://github.com/TheLuoFengLab/MolLangData/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/TheLuoFengLab/MolLangData.svg)](https://github.com/TheLuoFengLab/MolLangData/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/TheLuoFengLab/MolLangData.svg)](https://github.com/TheLuoFengLab/MolLangData/issues)
+[![Discord](https://img.shields.io/badge/Discord-join-7289da.svg)](https://discord.gg/hpW7sdMQGP)
 [![arXiv](https://img.shields.io/badge/arXiv-2602.02320-b31b1b.svg)](https://arxiv.org/abs/2602.02320)
 [![Hugging Face](https://img.shields.io/badge/🤗%20Datasets-ChemFM%2FMolLangData-yellow)](https://huggingface.co/datasets/ChemFM/MolLangData)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
