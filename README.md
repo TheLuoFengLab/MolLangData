@@ -1,5 +1,7 @@
 # MolLangData: A Large-Scale Dataset for Molecular Structure–Language Description
 
+<a id="readme-top"></a>
+
 [![arXiv](https://img.shields.io/badge/arXiv-2602.02320-b31b1b.svg)](https://arxiv.org/abs/2602.02320)
 [![Hugging Face](https://img.shields.io/badge/🤗%20Datasets-ChemFM%2FMolLangData-yellow)](https://huggingface.co/datasets/ChemFM/MolLangData)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -30,11 +32,15 @@
 | **MolLangData** | [GitHub](https://github.com/TheLuoFengLab/MolLangData) · [Hugging Face](https://huggingface.co/datasets/ChemFM/MolLangData) | Main dataset on Hugging Face (~163k samples). We are actively expanding beyond this release. |
 | **MolLangBench** (ICLR 2026) | [GitHub](https://github.com/TheLuoFengLab/MolLangBench) · [Hugging Face](https://huggingface.co/datasets/ChemFM/MolLangBench) | Human-curated benchmark for molecular structure recognition, editing, and generation. The generation task aligns with structural description in this work and serves as a standard, validated evaluation. |
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## Collaboration
 
 We are actively pursuing research on molecular–language alignment, including dataset curation and multimodal model development. If you are interested in collaborating, please contact [Feiyang Cai](mailto:feiyang@clemson.edu).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -46,6 +52,8 @@ We use a customized [OPSIN](https://github.com/feiyang-cai/opsin_mollangdata) fo
 - The repository is for reference; a **compiled JAR** is provided for the single-molecule workflow below.
 - The OPSIN fork README and usage will be updated later (see [TODO](#todo--roadmap)).
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## Requirements
@@ -53,6 +61,8 @@ We use a customized [OPSIN](https://github.com/feiyang-cai/opsin_mollangdata) fo
 - **Python** 3.8+
 - **Java** (JRE or JDK on `PATH`)
 - **Python dependencies:** `pip install -r requirements.txt` (installs `openai`, `rdkit`, and related packages)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -111,6 +121,8 @@ The script **`get_prompt_description_from_iupac.py`** takes one IUPAC name, runs
 - **With `-o DIR`:** Writes `DIR/prompt.md`; with `--get-description` also writes `DIR/descriptions.txt` and `DIR/generation_info.json` (backend, model, reasoning effort, duration, etc.).
 
 </details>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -316,6 +328,8 @@ Splits one JSONL into N chunks and runs N workers in tmux windows, each calling 
 
 </details>
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## Dataset on Hugging Face: structure and validation
@@ -341,6 +355,8 @@ The [MolLangData dataset on Hugging Face](https://huggingface.co/datasets/ChemFM
 | Hard       | GPT-5.2 | xhigh            | 15,110 (9.4%)     | 187 (9.4%)        | 180 (98.3%)          |
 | **Overall**| —       | —                | **161,111**       | **2,000**         | **1,972 (98.6%)**    |
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## TODO & roadmap
@@ -350,6 +366,8 @@ The [MolLangData dataset on Hugging Face](https://huggingface.co/datasets/ChemFM
   - [x] Difficulty-based routing (easy/medium/hard) and model/reasoning settings.
   - [x] Batch workflow: prepare prompts, call batch API, optional validation and export.
 - [ ] **OPSIN:** README and usage for [feiyang-cai/opsin_mollangdata](https://github.com/feiyang-cai/opsin_mollangdata); this repo will link to it and document JAR usage in the pipeline.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -377,14 +395,20 @@ For the related benchmark **MolLangBench** (ICLR 2026), you may also cite our pr
 }
 ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## Contact
 
 **Maintainer:** Feiyang Cai — [feiyang@clemson.edu](mailto:feiyang@clemson.edu)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
