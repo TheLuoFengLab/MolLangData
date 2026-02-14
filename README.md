@@ -25,10 +25,10 @@
 
 ## Dataset
 
-| Resource | Description |
-|----------|-------------|
-| **MolLangData** — [GitHub](https://github.com/TheLuoFengLab/MolLangData) · [Hugging Face](https://huggingface.co/datasets/ChemFM/MolLangData) | Main dataset on Hugging Face (~163k samples). We are actively expanding beyond this release. |
-| **MolLangBench** (ICLR 2026) — [GitHub](https://github.com/TheLuoFengLab/MolLangBench) · [Hugging Face](https://huggingface.co/datasets/ChemFM/MolLangBench) | Human-curated benchmark for molecular structure recognition, editing, and generation. The generation task aligns with structural description in this work and serves as a standard, validated evaluation. |
+| Resource | Links | Description |
+|----------|-------|-------------|
+| **MolLangData** | [GitHub](https://github.com/TheLuoFengLab/MolLangData) · [Hugging Face](https://huggingface.co/datasets/ChemFM/MolLangData) | Main dataset on Hugging Face (~163k samples). We are actively expanding beyond this release. |
+| **MolLangBench** (ICLR 2026) | [GitHub](https://github.com/TheLuoFengLab/MolLangBench) · [Hugging Face](https://huggingface.co/datasets/ChemFM/MolLangBench) | Human-curated benchmark for molecular structure recognition, editing, and generation. The generation task aligns with structural description in this work and serves as a standard, validated evaluation. |
 
 ---
 
@@ -60,7 +60,7 @@ We use a customized [OPSIN](https://github.com/feiyang-cai/opsin_mollangdata) fo
 
 The script **`get_prompt_description_from_iupac.py`** takes one IUPAC name, runs OPSIN to obtain XML and SMILES, computes a **difficulty level** (easy / medium / hard), builds the prompt, and optionally calls an LLM to generate a structure description.
 
-### Files involved
+**Files involved**
 
 | Path | Purpose |
 |------|---------|
@@ -69,25 +69,25 @@ The script **`get_prompt_description_from_iupac.py`** takes one IUPAC name, runs
 | `prompts/smiles_iupac_metadata_v13/` | Prompt template and semantic sections (default, bridged/fused/spiro rings) |
 | `config/llm_config.json` | LLM backend (Azure/OpenAI), model, reasoning effort per difficulty, timeouts (used only with `--get-description`) |
 
-### Run (from repo root)
+**Run (from repo root)**
 
-**Prompt only (no LLM):**
+- **Prompt only (no LLM):**
 
-```bash
-python3 get_prompt_description_from_iupac.py "3,4-dihydro-2H-1,5-benzodioxepin-7-yl-(2-fluorophenyl)methanone"
-```
+  ```bash
+  python3 get_prompt_description_from_iupac.py "3,4-dihydro-2H-1,5-benzodioxepin-7-yl-(2-fluorophenyl)methanone"
+  ```
 
-**With LLM description** (model and reasoning chosen by difficulty; backend from config):
+- **With LLM description** (model and reasoning chosen by difficulty; backend from config):
 
-```bash
-python3 get_prompt_description_from_iupac.py "3,4-dihydro-2H-1,5-benzodioxepin-7-yl-(2-fluorophenyl)methanone" --get-description
-```
+  ```bash
+  python3 get_prompt_description_from_iupac.py "3,4-dihydro-2H-1,5-benzodioxepin-7-yl-(2-fluorophenyl)methanone" --get-description
+  ```
 
-**Write output to a folder** (`prompt.md`, `descriptions.txt`, `generation_info.json`):
+- **Write output to a folder** (`prompt.md`, `descriptions.txt`, `generation_info.json`):
 
-```bash
-python3 get_prompt_description_from_iupac.py "ethane" --get-description -o out/
-```
+  ```bash
+  python3 get_prompt_description_from_iupac.py "ethane" --get-description -o out/
+  ```
 
 <details>
 <summary><strong>Options</strong></summary>
@@ -124,7 +124,7 @@ Download from Box to start from **Step 4** (or Step 3 if you start from the samp
 
 | Box resource | Contents |
 |--------------|----------|
-| **[MolLangData PubChem sampled TSV](https://clemson.box.com/s/5ioww4x9273pscfqtzmnpze80j9b8ugh)** | **Sampled TSV:** 8 rounds, 200k samples per round (`round_0/sampled.tsv`, `round_1/sampled.tsv`, …). **Parsing output (Step 3):** e.g. `round_1/parsing_out_mollangdata_0.1.3`. **Response API JSONL (Step 4):** e.g. `round_1/parsing_out_mollangdata_0.1.3_prompts_jobs` for starting at Step 5. |
+| **[MolLangData PubChem sampled TSV](https://clemson.box.com/s/5ioww4x9273pscfqtzmnpze80j9b8ugh)** | • **Sampled TSV:** 8 rounds, 200k samples per round (`round_0/sampled.tsv`, `round_1/sampled.tsv`, …).<br>• **Parsing output (Step 3):** e.g. `round_1/parsing_out_mollangdata_0.1.3`.<br>• **Response API JSONL (Step 4):** e.g. `round_1/parsing_out_mollangdata_0.1.3_prompts_jobs` for starting at Step 5. |
 
 The **published [MolLangData](https://huggingface.co/datasets/ChemFM/MolLangData) dataset** on Hugging Face corresponds to **round_0** data.
 
@@ -188,7 +188,7 @@ Build LLM job files from Step 3 output. The script assigns **difficulty** (easy/
 
 <br>
 
-**Run** (from repo root). `<input_folder>` must be Step 3 output containing `parsing_results.tsv` (e.g. `parsing_out_mollangdata_0.1.3`). Example on Box: [clemson.box.com/s/65bjtb0rnckjized7u8ewtqetul20oax](https://clemson.box.com/s/65bjtb0rnckjized7u8ewtqetul20oax).
+**Run** (from repo root). `<input_folder>` must be Step 3 output containing `parsing_results.tsv` (e.g. `parsing_out_mollangdata_0.1.3`). Example: [on Box](https://clemson.box.com/s/65bjtb0rnckjized7u8ewtqetul20oax).
 
 ```bash
 python3 batch_prompt_generation/4_create_batch_prompt_jsonl.py <input_folder> <output_folder> [prompts_folder] --api-format responses
@@ -241,25 +241,25 @@ python3 batch_prompt_generation/4_create_batch_prompt_jsonl.py <input_folder> <o
 
 <br>
 
-### Run
+**Run (from repo root)**
 
-**5a — OpenAI Batch** (submit, wait, retrieve). Replace `<input>` with a Step 4 `.jsonl` file or a directory of `.jsonl` files. Example JSONL on Box: [clemson.box.com/s/y3wgs4s5k77sb0hcsv3kjbjfd26vuhwf](https://clemson.box.com/s/y3wgs4s5k77sb0hcsv3kjbjfd26vuhwf).
+- **5a — OpenAI Batch** (submit, wait, retrieve). Replace `<input>` with a Step 4 `.jsonl` file or a directory of `.jsonl` files. Example JSONL: [on Box](https://clemson.box.com/s/y3wgs4s5k77sb0hcsv3kjbjfd26vuhwf).
 
-```bash
-python3 batch_prompt_generation/5a_submit_openai_batch_jobs.py <input> --output-dir ./batch_results
-```
+  ```bash
+  python3 batch_prompt_generation/5a_submit_openai_batch_jobs.py <input> --output-dir ./batch_results
+  ```
 
-**5b — One-by-one, single process** (Azure, resume with pool). Replace `<input>` with a Step 4 `.jsonl` file or a directory of `.jsonl` files. Example JSONL on Box: [clemson.box.com/s/y3wgs4s5k77sb0hcsv3kjbjfd26vuhwf](https://clemson.box.com/s/y3wgs4s5k77sb0hcsv3kjbjfd26vuhwf).
+- **5b — One-by-one, single process** (Azure, resume with pool). Replace `<input>` with a Step 4 `.jsonl` file or a directory of `.jsonl` files. Example JSONL: [on Box](https://clemson.box.com/s/y3wgs4s5k77sb0hcsv3kjbjfd26vuhwf).
 
-```bash
-python3 batch_prompt_generation/5b_run_requests_one_by_one.py <input> --backend azure --output-dir ./runs/run1 --resume --pool-folder ./runs/pool
-```
+  ```bash
+  python3 batch_prompt_generation/5b_run_requests_one_by_one.py <input> --backend azure --output-dir ./runs/run1 --resume --pool-folder ./runs/pool
+  ```
 
-**5b — One-by-one, multiple processes** (e.g. tmux; split one JSONL into 4 workers). Replace `<input>` with a Step 4 `.jsonl` file:
+- **5b — One-by-one, multiple processes** (e.g. tmux; split one JSONL into 4 workers). Replace `<input.jsonl>` with a Step 4 `.jsonl` file:
 
-```bash
-bash ./batch_prompt_generation/5b_run_tmux_jobs.sh -f <input> -s myrun -n 4 -o ./runs_out
-```
+  ```bash
+  bash ./batch_prompt_generation/5b_run_tmux_jobs.sh -f <input.jsonl> -s myrun -n 4 -o ./runs_out
+  ```
 
 <details>
 <summary><strong>Step 5a — Arguments (OpenAI Batch)</strong></summary>
