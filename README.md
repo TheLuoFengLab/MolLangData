@@ -34,6 +34,7 @@
 |----------|-------|-------------|
 | **MolLangData** | [GitHub](https://github.com/TheLuoFengLab/MolLangData) · [Hugging Face](https://huggingface.co/datasets/ChemFM/MolLangData) | Main dataset on Hugging Face (~163k samples). We are actively expanding beyond this release. |
 | **MolLangBench** (ICLR 2026) | [GitHub](https://github.com/TheLuoFengLab/MolLangBench) · [Hugging Face](https://huggingface.co/datasets/ChemFM/MolLangBench) | Human-curated benchmark for molecular structure recognition, editing, and generation. The generation task aligns with structural description in this work and serves as a standard, validated evaluation. |
+| **LangMolDiode** | [GitHub](https://github.com/feiyang-cai/LangMolDiode) | Language-conditional molecule generator trained with SFT and reinforcement learning on MolLangData. |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -347,7 +348,7 @@ The [MolLangData dataset on Hugging Face](https://huggingface.co/datasets/ChemFM
 |------------|---------|------------------|-------------------|-------------------|----------------------|
 | Easy       | GPT-5.2 | high             | 105,085 (65.2%)   | 1,317 (65.8%)     | 1,300 (98.7%)        |
 | Medium     | GPT-5.2 | xhigh            | 40,916 (25.4%)    | 496 (24.8%)       | 492 (99.2%)          |
-| Hard       | GPT-5.2 | xhigh            | 15,110 (9.4%)     | 187 (9.4%)        | 180 (98.3%)          |
+| Hard       | GPT-5.2 | xhigh            | 15,110 (9.4%)     | 187 (9.4%)        | 180 (96.3%)          |
 | **Overall**| —       | —                | **161,111**       | **2,000**         | **1,972 (98.6%)**    |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
